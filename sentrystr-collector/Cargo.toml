@@ -6,13 +6,14 @@ authors.workspace = true
 license.workspace = true
 repository.workspace = true
 description = "Collector service for retrieving Sentry-like events from Nostr network"
+readme = "README.md"
 
 [[bin]]
 name = "sentrystr-collector"
 path = "src/main.rs"
 
 [dependencies]
-sentrystr = { version = "0.1.0", path = "../sentrystr" }
+sentrystr = { version = "0.1.1", path = "../sentrystr" }
 nostr-sdk = { workspace = true }
 nostr = { workspace = true }
 serde = { workspace = true }

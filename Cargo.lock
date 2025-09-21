@@ -1476,7 +1476,7 @@ dependencies = [
 
 [[package]]
 name = "sentrystr"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "chrono",
  "nostr",
@@ -1490,7 +1490,7 @@ dependencies = [
 
 [[package]]
 name = "sentrystr-api"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "axum",
  "chrono",
@@ -1508,7 +1508,7 @@ dependencies = [
 
 [[package]]
 name = "sentrystr-collector"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "chrono",
  "clap",
@@ -1523,7 +1523,7 @@ dependencies = [
 
 [[package]]
 name = "sentrystr-tracing"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "chrono",
  "nostr",

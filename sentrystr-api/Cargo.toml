@@ -6,13 +6,14 @@ authors.workspace = true
 license.workspace = true
 repository.workspace = true
 description = "REST API for serving SentryStr events from Nostr network"
+readme = "README.md"
 
 [[bin]]
 name = "sentrystr-api"
 path = "src/main.rs"
 
 [dependencies]
-sentrystr-collector = { version = "0.1.0", path = "../sentrystr-collector" }
+sentrystr-collector = { version = "0.1.1", path = "../sentrystr-collector" }
 sentrystr = { version = "0.1.0", path = "../sentrystr" }
 nostr = { workspace = true }
 axum = "0.7"

@@ -6,6 +6,7 @@ authors.workspace = true
 license.workspace = true
 repository.workspace = true
 description = "Core library for publishing Sentry-like events to Nostr network"
+readme = "README.md"
 
 [[bin]]
 name = "sentrystr-example"
