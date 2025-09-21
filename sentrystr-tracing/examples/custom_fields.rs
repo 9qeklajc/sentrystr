@@ -1,5 +1,4 @@
 use sentrystr_tracing::SentryStrTracingBuilder;
-use serde_json::json;
 use tracing::{error, info, warn, Instrument};
 
 #[derive(Debug)]

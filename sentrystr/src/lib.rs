@@ -52,7 +52,7 @@
 //!     dm_client.add_relay("wss://relay.damus.io").await?;
 //!     dm_client.connect().await;
 //!
-//!     let recipient = PublicKey::from_bech32("npub1...")?;
+//!     let recipient = Keys::generate().public_key();
 //!     let dm_sender = DirectMessageBuilder::new()
 //!         .with_client(dm_client)
 //!         .with_keys(dm_keys)

@@ -33,13 +33,13 @@
 //! ```rust
 //! use sentrystr_tracing::{SentryStrTracingBuilder, builder::DirectMessageConfig};
 //! use sentrystr::Level;
-//! use nostr::PublicKey;
+//! use nostr::Keys;
 //! use tracing::{info, error};
 //!
 //! #[tokio::main]
 //! async fn main() -> Result<(), Box<dyn std::error::Error>> {
 //!     let relays = vec!["wss://relay.damus.io".to_string()];
-//!     let recipient = PublicKey::from_bech32("npub1...")?;
+//!     let recipient = Keys::generate().public_key();
 //!
 //!     // Setup DM alerts for errors
 //!     let dm_config = DirectMessageConfig::new(recipient, relays.clone())

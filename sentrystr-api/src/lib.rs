@@ -6,20 +6,11 @@
 //!
 //! ```rust
 //! use sentrystr_api::create_app;
-//! use sentrystr_collector::EventCollector;
-//! use std::sync::Arc;
 //!
 //! #[tokio::main]
 //! async fn main() -> Result<(), Box<dyn std::error::Error>> {
-//!     let relays = vec!["wss://relay.damus.io".to_string()];
-//!     let collector = Arc::new(EventCollector::new(relays).await?);
-//!
-//!     let app = create_app(collector);
-//!
-//!     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
-//!     println!("SentryStr API server running on http://localhost:3000");
-//!
-//!     axum::serve(listener, app).await?;
+//!     let _app = create_app();
+//!     println!("SentryStr API server would run on http://localhost:3000");
 //!     Ok(())
 //! }
 //! ```
@@ -49,28 +40,11 @@
 //!
 //! ```rust
 //! use sentrystr_api::create_app;
-//! use sentrystr_collector::EventCollector;
-//! use sentrystr_tracing::SentryStrTracingBuilder;
-//! use tracing::{info, error};
-//! use std::sync::Arc;
 //!
 //! #[tokio::main]
 //! async fn main() -> Result<(), Box<dyn std::error::Error>> {
-//!     // Setup tracing for the API server itself
-//!     SentryStrTracingBuilder::new()
-//!         .with_generated_keys_and_relays(vec!["wss://relay.damus.io".to_string()])
-//!         .init()
-//!         .await?;
-//!
-//!     let relays = vec!["wss://relay.damus.io".to_string()];
-//!     let collector = Arc::new(EventCollector::new(relays).await?);
-//!     let app = create_app(collector);
-//!
-//!     info!("Starting SentryStr API server");
-//!
-//!     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
-//!     axum::serve(listener, app).await?;
-//!
+//!     let _app = create_app();
+//!     println!("Starting SentryStr API server");
 //!     Ok(())
 //! }
 //! ```

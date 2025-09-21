@@ -36,10 +36,10 @@ pub struct SentryStrTracingBuilder {
 /// ```rust
 /// use sentrystr_tracing::builder::DirectMessageConfig;
 /// use sentrystr::Level;
-/// use nostr::PublicKey;
+/// use nostr::Keys;
 ///
 /// # fn example() -> Result<(), Box<dyn std::error::Error>> {
-/// let recipient = PublicKey::from_bech32("npub1...")?;
+/// let recipient = Keys::generate().public_key();
 /// let relays = vec!["wss://relay.damus.io".to_string()];
 ///
 /// let dm_config = DirectMessageConfig::new(recipient, relays)
