@@ -1,0 +1,36 @@
+[package]
+name = "sentrystr-tracing"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description.workspace = true
+
+[dependencies]
+sentrystr = { version = "0.1.0", path = "../sentrystr" }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+nostr = { workspace = true }
+nostr-sdk = { workspace = true }
+chrono = { workspace = true }
+uuid = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+tracing-test = "0.2"
+
+[[example]]
+name = "basic_usage"
+path = "examples/basic_usage.rs"
+
+[[example]]
+name = "with_direct_messages"
+path = "examples/with_direct_messages.rs"
+
+[[example]]
+name = "custom_fields"
+path = "examples/custom_fields.rs"

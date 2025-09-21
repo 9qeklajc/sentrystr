@@ -1,0 +1,27 @@
+[workspace]
+resolver = "2"
+members = [
+    "sentrystr",
+    "sentrystr-collector",
+    "sentrystr-api",
+    "sentrystr-tracing",
+]
+
+[workspace.package]
+edition = "2024"
+version = "0.1.0"
+authors = ["9qeklajc <npub1ygjd597hdwu8larprmhj893d5p832j5mhejpx40ukezgudvayg9qeklajc>"]
+license = "MIT"
+repository = "https://github.com/9qeklajc/sentrystr"
+description = "A decentralized error tracking and alerting system using Nostr"
+
+[workspace.dependencies]
+nostr-sdk = { version = "0.43", features = ["all-nips"] }
+nostr = { version = "0.43", features = ["nip44", "nip59"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.0", features = ["v4"] }
+thiserror = "2.0"
+clap = { version = "4.0", features = ["derive"] }
