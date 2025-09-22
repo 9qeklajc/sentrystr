@@ -34,9 +34,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/sentrystr/sentrystr"
-Repository = "https://github.com/sentrystr/sentrystr"
-Issues = "https://github.com/sentrystr/sentrystr/issues"
+Homepage = "https://github.com/9qeklajc/sentrystr"
+Repository = "https://github.com/9qeklajc/sentrystr"
+Issues = "https://github.com/9qeklajc/sentrystr/issues"
 
 [tool.maturin]
 python-source = "python"
