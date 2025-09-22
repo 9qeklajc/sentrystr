@@ -3,17 +3,18 @@
 Debug test to investigate why events aren't being received
 """
 
-import sys
 import os
+import sys
 import time
 from datetime import datetime
 
 # Add the built module to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'python'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 
 try:
     import sentrystr
     from key_generator import generate_test_keys, get_target_pubkey
+
     print("✓ Successfully imported sentrystr and key generator")
 except ImportError as e:
     print(f"❌ Failed to import: {e}")
@@ -26,14 +27,12 @@ TARGET_PUBKEY = get_target_pubkey()  # Use npub directly
 
 # Generate keys
 keys = generate_test_keys()
-sender_private_key = keys['private_key']
-sender_public_key = keys['public_key_hex']
+sender_private_key = keys["private_key"]
+sender_public_key = keys["public_key_hex"]
 
 # Test with fewer relays for better debugging
-TEST_RELAYS = [
-    "wss://relay.damus.io",
-    "wss://nos.lol"
-]
+TEST_RELAYS = ["wss://relay.damus.io", "wss://nos.lol"]
+
 
 def debug_public_event():
     """Send a simple public event"""
@@ -54,8 +53,10 @@ def debug_public_event():
     except Exception as e:
         print(f"❌ Public event failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 def debug_encrypted_event():
     """Send a simple encrypted event to target npub"""
@@ -78,8 +79,10 @@ def debug_encrypted_event():
     except Exception as e:
         print(f"❌ Encrypted event failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 def debug_with_original_key():
     """Test with the original hardcoded key to see if dynamic keys are the issue"""
@@ -104,8 +107,10 @@ def debug_with_original_key():
     except Exception as e:
         print(f"❌ Original key test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 def main():
     print("🚀 DEBUG: Event Reception Investigation")
@@ -145,6 +150,7 @@ def main():
         print("   4. Some relays might be down or slow")
     else:
         print("\n❌ Some tests failed - check errors above")
+
 
 if __name__ == "__main__":
     main()

@@ -4,18 +4,18 @@ Advanced combined example with exception handling and real-world scenarios
 Extends the basic combined example with production-ready error tracking
 """
 
-import sys
 import os
+import sys
 import time
-import json
 from datetime import datetime
 
 # Add the built module to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'python'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 
 try:
     import sentrystr
     from key_generator import generate_test_keys, get_target_pubkey
+
     print("✓ Successfully imported sentrystr and key generator")
 except ImportError as e:
     print(f"❌ Failed to import: {e}")
@@ -26,11 +26,8 @@ except ImportError as e:
 TARGET_NPUB = "npub18kpn83drge7x9vz4cuhh7xta79sl4tfq55se4e554yj90s8y3f7qa49nps"
 TARGET_PUBKEY = get_target_pubkey()  # Use npub directly
 
-RELAYS = [
-    "wss://relay.damus.io",
-    "wss://nos.lol",
-    "wss://relay.snort.social"
-]
+RELAYS = ["wss://relay.damus.io", "wss://nos.lol", "wss://relay.snort.social"]
+
 
 class SentryStrManager:
     """
@@ -40,14 +37,16 @@ class SentryStrManager:
 
     def __init__(self):
         self.keys = generate_test_keys()
-        self.sender_private_key = self.keys['private_key']
-        self.sender_public_key = self.keys['public_key_hex']
+        self.sender_private_key = self.keys["private_key"]
+        self.sender_public_key = self.keys["public_key_hex"]
 
         # Create clients for different purposes (similar to Rust's different configurations)
         self.public_client = self._create_public_client()
         self.secure_client = self._create_secure_client()
 
-        print(f"🔑 Initialized SentryStr Manager with key: {self.sender_public_key[:20]}...")
+        print(
+            f"🔑 Initialized SentryStr Manager with key: {self.sender_public_key[:20]}..."
+        )
 
     def _create_public_client(self):
         """Create client for public events (info, debug)"""
@@ -67,35 +66,40 @@ class SentryStrManager:
         """
         # The event stores the level internally, we need to check the level that was set
         # For this demo, we'll manually track it or extract from tags
-        level_tag = None
-        for tag_name, tag_value in [("level", None)]:  # This is a simplified approach
-            # In practice, you'd store the level when creating the event
-            pass
+        # (In practice, you'd store the level when creating the event)
 
         # For this example, let's determine level from the message content or tags
         # In a real implementation, you'd want to store this when setting the level
-        message = getattr(event, 'message', '') if hasattr(event, 'message') else ''
+        message = getattr(event, "message", "") if hasattr(event, "message") else ""
 
         # Simple heuristic based on event content (better would be to store level properly)
-        if 'startup' in message.lower() or 'authentication' in message.lower() or 'api request' in message.lower():
-            level = 'info'
-        elif 'warning' in message.lower() or 'performance' in message.lower():
-            level = 'warning'
-        elif 'error' in message.lower() or 'exception' in message.lower() or 'failed' in message.lower():
-            level = 'error'
-        elif 'fatal' in message.lower() or 'shutdown' in message.lower():
-            level = 'fatal'
+        if (
+            "startup" in message.lower()
+            or "authentication" in message.lower()
+            or "api request" in message.lower()
+        ):
+            level = "info"
+        elif "warning" in message.lower() or "performance" in message.lower():
+            level = "warning"
+        elif (
+            "error" in message.lower()
+            or "exception" in message.lower()
+            or "failed" in message.lower()
+        ):
+            level = "error"
+        elif "fatal" in message.lower() or "shutdown" in message.lower():
+            level = "fatal"
         else:
-            level = 'info'
+            level = "info"
 
-        if level in ['debug', 'info']:
+        if level in ["debug", "info"]:
             # Send to public client (like regular events in Rust)
             self.public_client.capture_event(event)
-            return 'public'
+            return "public"
         else:
             # Send to encrypted client (like DirectMessage in Rust)
             self.secure_client.capture_event(event)
-            return 'encrypted'
+            return "encrypted"
 
     def capture_exception_with_stacktrace(self, exc_type, exc_message, stack_frames):
         """
@@ -105,9 +109,9 @@ class SentryStrManager:
         # Create frames
         frames = []
         for frame_data in stack_frames:
-            frame = sentrystr.Frame(frame_data['filename'])
-            frame.with_function(frame_data['function'])
-            frame.with_lineno(frame_data['lineno'])
+            frame = sentrystr.Frame(frame_data["filename"])
+            frame.with_function(frame_data["function"])
+            frame.with_lineno(frame_data["lineno"])
             frames.append(frame)
 
         # Create stacktrace and exception
@@ -127,7 +131,7 @@ class SentryStrManager:
 
         # Always encrypt exceptions (high severity)
         self.secure_client.capture_event(event)
-        return 'encrypted'
+        return "encrypted"
 
     def simulate_application_lifecycle(self):
         """
@@ -177,7 +181,9 @@ class SentryStrManager:
         perf_event.with_tag("component", "database")
         perf_event.add_extra("query_time_ms", 5432)
         perf_event.add_extra("threshold_ms", 1000)
-        perf_event.add_extra("query", "SELECT * FROM large_table WHERE complex_condition")
+        perf_event.add_extra(
+            "query", "SELECT * FROM large_table WHERE complex_condition"
+        )
 
         delivery = self.capture_with_level_filtering(perf_event)
         print(f"✅ Performance warning sent ({delivery})")
@@ -187,13 +193,13 @@ class SentryStrManager:
         stack_frames = [
             {"filename": "main.py", "function": "main", "lineno": 42},
             {"filename": "database.py", "function": "connect", "lineno": 156},
-            {"filename": "connection.py", "function": "establish", "lineno": 89}
+            {"filename": "connection.py", "function": "establish", "lineno": 89},
         ]
 
         delivery = self.capture_exception_with_stacktrace(
             "DatabaseConnectionError",
             "Connection pool exhausted after 30 seconds",
-            stack_frames
+            stack_frames,
         )
         print(f"✅ Critical exception captured ({delivery})")
         time.sleep(1)
@@ -212,6 +218,7 @@ class SentryStrManager:
         print(f"✅ Shutdown event sent ({delivery})")
 
         print("\n📊 Lifecycle simulation complete!")
+
 
 def demonstrate_real_world_patterns():
     """
@@ -284,6 +291,7 @@ def demonstrate_real_world_patterns():
 
     print("\n✅ Real-world patterns demonstration complete!")
 
+
 def main():
     """Main function demonstrating advanced SentryStr usage"""
     print("🚀 Advanced SentryStr Python Combined Example")
@@ -316,7 +324,9 @@ def main():
     except Exception as e:
         print(f"❌ Advanced example failed: {e}")
         import traceback
+
         traceback.print_exc()
+
 
 if __name__ == "__main__":
     main()

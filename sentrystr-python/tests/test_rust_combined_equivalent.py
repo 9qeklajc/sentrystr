@@ -3,16 +3,17 @@
 Python test that exactly matches the Rust combined_example.rs functionality
 """
 
-import sys
 import os
+import sys
 import time
 
 # Add the built module to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'python'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 
 try:
     import sentrystr
     from key_generator import generate_test_keys, get_target_pubkey
+
     print("✓ Successfully imported sentrystr and key generator")
 except ImportError as e:
     print(f"❌ Failed to import: {e}")
@@ -22,11 +23,8 @@ except ImportError as e:
 TARGET_NPUB = "npub18kpn83drge7x9vz4cuhh7xta79sl4tfq55se4e554yj90s8y3f7qa49nps"
 TARGET_PUBKEY = get_target_pubkey()
 
-RELAYS = [
-    "wss://relay.damus.io",
-    "wss://nos.lol",
-    "wss://nostr.chaima.info"
-]
+RELAYS = ["wss://relay.damus.io", "wss://nos.lol", "wss://nostr.chaima.info"]
+
 
 def run_combined_example():
     """Python equivalent of Rust run_combined_example()"""
@@ -36,8 +34,8 @@ def run_combined_example():
 
     # Generate keys (like Keys::generate() in Rust)
     keys = generate_test_keys()
-    sender_private_key = keys['private_key']
-    sender_public_key = keys['public_key_hex']
+    sender_private_key = keys["private_key"]
+    sender_public_key = keys["public_key_hex"]
 
     print(f"🔑 Generated sender key: {sender_public_key[:20]}...")
 
@@ -100,8 +98,10 @@ def run_combined_example():
     except Exception as e:
         print(f"❌ Combined example failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 if __name__ == "__main__":
     success = run_combined_example()

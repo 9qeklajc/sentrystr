@@ -15,21 +15,13 @@ TEST_RELAYS = [
     "wss://nos.lol",
     "wss://relay.snort.social",
     "wss://nostr.wine",
-    "wss://relay.nostr.band"
+    "wss://relay.nostr.band",
 ]
 
 # Test scenarios configuration
 TEST_SCENARIOS = {
-    "basic_errors": {
-        "enabled": True,
-        "count": 3,
-        "delay": 1.0
-    },
-    "detailed_events": {
-        "enabled": True,
-        "count": 2,
-        "delay": 2.0
-    },
+    "basic_errors": {"enabled": True, "count": 3, "delay": 1.0},
+    "detailed_events": {"enabled": True, "count": 2, "delay": 2.0},
     "exception_types": {
         "enabled": True,
         "types": [
@@ -37,15 +29,12 @@ TEST_SCENARIOS = {
             "ConnectionError",
             "TimeoutError",
             "PermissionError",
-            "RuntimeError"
-        ]
+            "RuntimeError",
+        ],
     },
     "log_levels": {
         "enabled": True,
-        "levels": ["debug", "info", "warning", "error", "fatal"]
+        "levels": ["debug", "info", "warning", "error", "fatal"],
     },
-    "performance": {
-        "enabled": True,
-        "simulate_slow_operations": True
-    }
+    "performance": {"enabled": True, "simulate_slow_operations": True},
 }

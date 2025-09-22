@@ -3,16 +3,17 @@
 Test sending events to specific npub using SentryStr Python bindings
 """
 
-import sys
 import os
+import sys
 import time
 from datetime import datetime
 
 # Add the built module to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'python'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 
 try:
     import sentrystr
+
     print("✓ Successfully imported sentrystr")
 except ImportError as e:
     print(f"❌ Failed to import sentrystr: {e}")
@@ -31,13 +32,14 @@ RELAYS = [
     "wss://relay.damus.io",
     "wss://nos.lol",
     "wss://relay.snort.social",
-    "wss://nostr.wine"
+    "wss://nostr.wine",
 ]
+
 
 def send_test_events():
     """Send various test events to the target npub"""
     print(f"🎯 Sending test events to npub: {TARGET_NPUB}")
-    print(f"🔐 Using encrypted messaging to target")
+    print("🔐 Using encrypted messaging to target")
     print(f"📡 Using relays: {', '.join(RELAYS)}")
     print("=" * 60)
 
@@ -53,7 +55,9 @@ def send_test_events():
 
         # Test 1: Basic error message
         print("\n📝 Test 1: Basic Error Message")
-        client.capture_error("Hello from SentryStr Python bindings! This is a test error message.")
+        client.capture_error(
+            "Hello from SentryStr Python bindings! This is a test error message."
+        )
         print("✓ Sent basic error message")
         time.sleep(2)
 
@@ -84,7 +88,9 @@ def send_test_events():
 
         # Add extra data
         event.add_extra("test_framework", "custom")
-        event.add_extra("python_version", f"{sys.version_info.major}.{sys.version_info.minor}")
+        event.add_extra(
+            "python_version", f"{sys.version_info.major}.{sys.version_info.minor}"
+        )
         event.add_extra("event_number", 3)
 
         client.capture_event(event)
@@ -111,7 +117,9 @@ def send_test_events():
         stacktrace = sentrystr.Stacktrace([frame1, frame2, frame3])
 
         # Create exception
-        exception = sentrystr.Exception("DatabaseError", "Connection timeout after 30 seconds")
+        exception = sentrystr.Exception(
+            "DatabaseError", "Connection timeout after 30 seconds"
+        )
         exception.with_stacktrace(stacktrace)
 
         # Create event
@@ -148,7 +156,7 @@ def send_test_events():
             ("info", "Info: User successfully logged in"),
             ("warning", "Warning: API rate limit approaching"),
             ("error", "Error: Failed to send notification email"),
-            ("fatal", "Fatal: System critical error detected")
+            ("fatal", "Fatal: System critical error detected"),
         ]
 
         for level, message in severity_tests:
@@ -163,20 +171,26 @@ def send_test_events():
             print(f"✓ Sent {level.upper()} level event")
             time.sleep(1)
 
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("🎉 All test events sent successfully!")
         print(f"📱 Check your Nostr client for events sent to {TARGET_NPUB}")
         print("🔐 Events are encrypted and should only be visible to the target npub")
-        print("⏰ Note: It may take a few moments for events to propagate across relays")
-        print("💡 Look for events from npub: npub1j4c6269y9w0q2er2xjw8sv2ehyrtfxq3jwgdlxj6qfn8z4gjsq5qg4jsaxr")
+        print(
+            "⏰ Note: It may take a few moments for events to propagate across relays"
+        )
+        print(
+            "💡 Look for events from npub: npub1j4c6269y9w0q2er2xjw8sv2ehyrtfxq3jwgdlxj6qfn8z4gjsq5qg4jsaxr"
+        )
 
         return True
 
     except Exception as e:
         print(f"❌ Test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 if __name__ == "__main__":
     success = send_test_events()

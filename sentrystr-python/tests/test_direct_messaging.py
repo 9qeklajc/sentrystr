@@ -4,17 +4,18 @@ Focused test for direct messaging functionality
 Equivalent to DirectMessageSender in Rust combined example
 """
 
-import sys
 import os
+import sys
 import time
 from datetime import datetime
 
 # Add the built module to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'python'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 
 try:
     import sentrystr
     from key_generator import generate_test_keys, get_target_pubkey
+
     print("✓ Successfully imported sentrystr and key generator")
 except ImportError as e:
     print(f"❌ Failed to import: {e}")
@@ -25,11 +26,8 @@ except ImportError as e:
 TARGET_NPUB = "npub18kpn83drge7x9vz4cuhh7xta79sl4tfq55se4e554yj90s8y3f7qa49nps"
 TARGET_PUBKEY = get_target_pubkey()  # Use npub directly
 
-RELAYS = [
-    "wss://relay.damus.io",
-    "wss://nos.lol",
-    "wss://nostr.chaima.info"
-]
+RELAYS = ["wss://relay.damus.io", "wss://nos.lol", "wss://nostr.chaima.info"]
+
 
 def test_direct_messaging():
     """
@@ -41,8 +39,8 @@ def test_direct_messaging():
 
     # Generate keys for this session
     keys = generate_test_keys()
-    sender_private_key = keys['private_key']
-    sender_public_key = keys['public_key_hex']
+    sender_private_key = keys["private_key"]
+    sender_public_key = keys["public_key_hex"]
 
     print(f"🔑 Generated sender key: {sender_public_key[:20]}...")
     print(f"🎯 Target recipient: {TARGET_NPUB}")
@@ -121,7 +119,9 @@ def test_direct_messaging():
         # Test 5: Business-critical alert
         print("\n🔗 Test 5: Business-Critical Alert")
         business_event = sentrystr.Event()
-        business_event.with_message("Payment processing system failure - revenue impact")
+        business_event.with_message(
+            "Payment processing system failure - revenue impact"
+        )
         business_event.with_level(sentrystr.Level("error"))
 
         # Add user context for business impact
@@ -168,8 +168,10 @@ def test_direct_messaging():
     except Exception as e:
         print(f"❌ Direct messaging test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 if __name__ == "__main__":
     success = test_direct_messaging()

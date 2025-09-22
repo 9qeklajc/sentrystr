@@ -28,16 +28,16 @@ Example:
 """
 
 from ._sentrystr import (
-    NostrSentryClient,
     Config,
     Event,
-    Level,
     Exception,
-    Stacktrace,
     Frame,
-    User,
+    Level,
+    NostrSentryClient,
     Request,
     SentryStrError,
+    Stacktrace,
+    User,
 )
 
 __all__ = [

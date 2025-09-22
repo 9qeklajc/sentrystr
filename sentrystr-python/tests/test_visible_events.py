@@ -4,17 +4,17 @@ Test that sends events using standard Nostr event kind (1)
 so they're visible in regular Nostr clients
 """
 
-import sys
 import os
-import time
+import sys
 from datetime import datetime
 
 # Add the built module to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'python'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 
 try:
     import sentrystr
     from key_generator import generate_test_keys, get_target_pubkey
+
     print("✓ Successfully imported sentrystr and key generator")
 except ImportError as e:
     print(f"❌ Failed to import: {e}")
@@ -27,14 +27,11 @@ TARGET_PUBKEY = get_target_pubkey()  # Use npub directly
 
 # Generate keys
 keys = generate_test_keys()
-sender_private_key = keys['private_key']
-sender_public_key = keys['public_key_hex']
+sender_private_key = keys["private_key"]
+sender_public_key = keys["public_key_hex"]
 
-RELAYS = [
-    "wss://relay.damus.io",
-    "wss://nos.lol",
-    "wss://relay.snort.social"
-]
+RELAYS = ["wss://relay.damus.io", "wss://nos.lol", "wss://relay.snort.social"]
+
 
 def test_with_standard_event_kind():
     """Test sending events with standard Nostr event kind (1) for visibility"""
@@ -48,9 +45,9 @@ def test_with_standard_event_kind():
 
         # The default is kind 9898, let's see if we can access it
         print("Current SentryStr configuration:")
-        print(f"- Uses custom event kind: 9898 (not visible in most clients)")
-        print(f"- Standard text note kind: 1 (visible in all clients)")
-        print(f"- Encrypted events use NIP-44 encryption")
+        print("- Uses custom event kind: 9898 (not visible in most clients)")
+        print("- Standard text note kind: 1 (visible in all clients)")
+        print("- Encrypted events use NIP-44 encryption")
 
         # Test encrypted message to target
         config.with_encryption(TARGET_PUBKEY)
@@ -59,7 +56,7 @@ def test_with_standard_event_kind():
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
         message = f"🔐 SentryStr Event at {timestamp} from {sender_public_key[:16]}..."
 
-        print(f"\nSending encrypted SentryStr event (kind 9898):")
+        print("\nSending encrypted SentryStr event (kind 9898):")
         print(f"Message: {message}")
         client.capture_message(message)
         print("✅ Encrypted SentryStr event sent successfully")
@@ -68,8 +65,10 @@ def test_with_standard_event_kind():
         public_config = sentrystr.Config(sender_private_key, RELAYS)
         public_client = sentrystr.NostrSentryClient(public_config)
 
-        public_message = f"🌍 Public SentryStr Event at {timestamp} from {sender_public_key[:16]}..."
-        print(f"\nSending public SentryStr event (kind 9898):")
+        public_message = (
+            f"🌍 Public SentryStr Event at {timestamp} from {sender_public_key[:16]}..."
+        )
+        print("\nSending public SentryStr event (kind 9898):")
         print(f"Message: {public_message}")
         public_client.capture_message(public_message)
         print("✅ Public SentryStr event sent successfully")
@@ -97,8 +96,10 @@ def test_with_standard_event_kind():
     except Exception as e:
         print(f"❌ Test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 def send_test_text_note():
     """
@@ -112,7 +113,10 @@ def send_test_text_note():
     print("• Event kind 1 (text note)")
     print("• Standard Nostr client monitoring")
     print()
-    print("SentryStr is designed for specialized error tracking, not general messaging.")
+    print(
+        "SentryStr is designed for specialized error tracking, not general messaging."
+    )
+
 
 if __name__ == "__main__":
     print("🚀 SentryStr Event Visibility Test")

@@ -4,18 +4,18 @@ Real-world test suite for SentryStr Python bindings
 Sends actual events to the specified npub for testing
 """
 
-import sys
 import os
+import sys
 import time
-import asyncio
 from datetime import datetime
 
 # Add the built module to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'python'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 
 try:
     import sentrystr
     from key_generator import generate_test_keys, get_target_pubkey
+
     print("✓ Successfully imported sentrystr and key generator")
 except ImportError as e:
     print(f"❌ Failed to import: {e}")
@@ -28,14 +28,15 @@ TEST_PUBKEY = get_target_pubkey()  # Use npub directly
 
 # Generate dynamic keys for this test run
 DYNAMIC_KEYS = generate_test_keys()
-TEST_PRIVATE_KEY = DYNAMIC_KEYS['private_key']
-TEST_PUBLIC_KEY = DYNAMIC_KEYS['public_key_hex']
+TEST_PRIVATE_KEY = DYNAMIC_KEYS["private_key"]
+TEST_PUBLIC_KEY = DYNAMIC_KEYS["public_key_hex"]
 TEST_RELAYS = [
     "wss://relay.damus.io",
     "wss://nos.lol",
     "wss://relay.snort.social",
-    "wss://nostr.chaima.info"
+    "wss://nostr.chaima.info",
 ]
+
 
 def test_basic_error_reporting():
     """Test basic error reporting functionality"""
@@ -51,11 +52,15 @@ def test_basic_error_reporting():
         print("✓ Created NostrSentryClient")
 
         # Test simple error message
-        client.capture_error(f"Test error from Python bindings with dynamic key: {TEST_PUBLIC_KEY[:16]}...")
+        client.capture_error(
+            f"Test error from Python bindings with dynamic key: {TEST_PUBLIC_KEY[:16]}..."
+        )
         print("✓ Sent basic error message")
 
         # Test simple message
-        client.capture_message(f"Test message from Python bindings - System operational from key: {TEST_PUBLIC_KEY[:16]}...")
+        client.capture_message(
+            f"Test message from Python bindings - System operational from key: {TEST_PUBLIC_KEY[:16]}..."
+        )
         print("✓ Sent basic message")
 
         return True
@@ -63,8 +68,10 @@ def test_basic_error_reporting():
     except Exception as e:
         print(f"❌ Basic error reporting test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 def test_detailed_event_creation():
     """Test creating detailed events with full context"""
@@ -92,7 +99,9 @@ def test_detailed_event_creation():
         request.with_url("https://api.example.com/users/12345")
         request.with_method("GET")
         request.with_query_string("include=profile&format=json")
-        event.with_user(user)  # Note: should be event.with_request(request) but testing current API
+        event.with_user(
+            user
+        )  # Note: should be event.with_request(request) but testing current API
         print("✓ Added request context")
 
         # Add tags
@@ -120,8 +129,10 @@ def test_detailed_event_creation():
     except Exception as e:
         print(f"❌ Detailed event creation test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 def test_exception_handling():
     """Test exception handling and reporting"""
@@ -137,7 +148,7 @@ def test_exception_handling():
             ("ConnectionError", "Failed to connect to database after 3 retries"),
             ("TimeoutError", "Request timed out after 30 seconds"),
             ("PermissionError", "Access denied: insufficient privileges for operation"),
-            ("FileNotFoundError", "Configuration file not found: /etc/app/config.yml")
+            ("FileNotFoundError", "Configuration file not found: /etc/app/config.yml"),
         ]
 
         for exc_type, exc_message in exceptions_to_test:
@@ -161,8 +172,10 @@ def test_exception_handling():
     except Exception as e:
         print(f"❌ Exception handling test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 def test_stacktrace_reporting():
     """Test stacktrace creation and reporting"""
@@ -197,7 +210,9 @@ def test_stacktrace_reporting():
         stacktrace = sentrystr.Stacktrace(frames)
 
         # Create exception with stacktrace
-        exception = sentrystr.Exception("DatabaseConnectionError", "Connection pool exhausted")
+        exception = sentrystr.Exception(
+            "DatabaseConnectionError", "Connection pool exhausted"
+        )
         exception.with_stacktrace(stacktrace)
 
         # Create event
@@ -216,8 +231,10 @@ def test_stacktrace_reporting():
     except Exception as e:
         print(f"❌ Stacktrace reporting test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 def test_different_log_levels():
     """Test different log levels and message types"""
@@ -233,7 +250,7 @@ def test_different_log_levels():
             ("info", "Info: User login successful for user@example.com"),
             ("warning", "Warning: API rate limit approaching (80% of quota used)"),
             ("error", "Error: Failed to send notification email"),
-            ("fatal", "Fatal: System memory exhausted, shutting down")
+            ("fatal", "Fatal: System memory exhausted, shutting down"),
         ]
 
         for level_name, message in levels_and_messages:
@@ -254,8 +271,10 @@ def test_different_log_levels():
     except Exception as e:
         print(f"❌ Log levels test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 def test_performance_monitoring():
     """Test performance monitoring events"""
@@ -271,39 +290,41 @@ def test_performance_monitoring():
                 "operation": "database_query",
                 "duration": 1.234,
                 "query": "SELECT * FROM users WHERE active = true",
-                "level": "info"
+                "level": "info",
             },
             {
                 "operation": "api_request",
                 "duration": 0.567,
                 "endpoint": "/api/v1/users",
-                "level": "info"
+                "level": "info",
             },
             {
                 "operation": "cache_miss",
                 "duration": 0.089,
                 "cache_key": "user:12345:profile",
-                "level": "warning"
+                "level": "warning",
             },
             {
                 "operation": "slow_query",
                 "duration": 5.678,
                 "query": "SELECT COUNT(*) FROM large_table",
-                "level": "warning"
-            }
+                "level": "warning",
+            },
         ]
 
         for perf_data in performance_events:
             event = sentrystr.Event()
-            event.with_message(f"Performance: {perf_data['operation']} took {perf_data['duration']}s")
-            event.with_level(sentrystr.Level(perf_data['level']))
-            event.with_tag("operation_type", perf_data['operation'])
+            event.with_message(
+                f"Performance: {perf_data['operation']} took {perf_data['duration']}s"
+            )
+            event.with_level(sentrystr.Level(perf_data["level"]))
+            event.with_tag("operation_type", perf_data["operation"])
             event.with_tag("performance", "monitoring")
-            event.add_extra("duration_seconds", perf_data['duration'])
+            event.add_extra("duration_seconds", perf_data["duration"])
 
             # Add operation-specific data
             for key, value in perf_data.items():
-                if key not in ['operation', 'duration', 'level']:
+                if key not in ["operation", "duration", "level"]:
                     event.add_extra(key, value)
 
             client.capture_event(event)
@@ -316,12 +337,14 @@ def test_performance_monitoring():
     except Exception as e:
         print(f"❌ Performance monitoring test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
+
 def run_all_tests():
     """Run all test suites"""
-    print(f"🚀 Starting SentryStr Python Bindings Test Suite (Dynamic Keys)")
+    print("🚀 Starting SentryStr Python Bindings Test Suite (Dynamic Keys)")
     print(f"📡 Sending events to npub: {TEST_NPUB}")
     print(f"🆔 Generated sender pubkey: {TEST_PUBLIC_KEY[:20]}...")
     print(f"🔑 Generated sender private key: {TEST_PRIVATE_KEY[:20]}...")
@@ -341,7 +364,7 @@ def run_all_tests():
     failed = 0
 
     for test_name, test_func in tests:
-        print(f"\n{'='*20} {test_name} {'='*20}")
+        print(f"\n{'=' * 20} {test_name} {'=' * 20}")
         try:
             if test_func():
                 passed += 1
@@ -356,19 +379,24 @@ def run_all_tests():
         # Small delay between test suites
         time.sleep(1)
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print(f"📊 Test Results: {passed} passed, {failed} failed")
 
     if failed == 0:
         print("🎉 All tests passed! Events should be visible on the Nostr network.")
         print(f"📱 Check your Nostr client for events sent to {TEST_NPUB}")
-        print(f"🆔 Events sent from dynamically generated key: {TEST_PUBLIC_KEY[:20]}...")
-        print("⏰ Note: It may take a few moments for events to propagate across relays")
+        print(
+            f"🆔 Events sent from dynamically generated key: {TEST_PUBLIC_KEY[:20]}..."
+        )
+        print(
+            "⏰ Note: It may take a few moments for events to propagate across relays"
+        )
         print("🔄 Run this test again for different keys each time!")
     else:
         print("⚠️  Some tests failed. Check the output above for details.")
 
     return failed == 0
+
 
 if __name__ == "__main__":
     success = run_all_tests()

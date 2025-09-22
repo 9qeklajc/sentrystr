@@ -4,18 +4,19 @@ Dynamic key generation test for SentryStr Python bindings
 Generates new keys for each test run
 """
 
-import sys
 import os
+import sys
 import time
 from datetime import datetime
 
 # Add the built module to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'python'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 sys.path.insert(0, os.path.dirname(__file__))
 
 try:
     import sentrystr
     from key_generator import generate_test_keys, get_target_pubkey
+
     print("✓ Successfully imported sentrystr and key generator")
 except ImportError as e:
     print(f"❌ Failed to import: {e}")
@@ -31,16 +32,17 @@ RELAYS = [
     "wss://nos.lol",
     "wss://relay.snort.social",
     "wss://nostr.wine",
-    "wss://relay.nostr.band"
+    "wss://relay.nostr.band",
 ]
+
 
 def run_dynamic_key_test():
     """Run test with dynamically generated keys"""
 
     # Generate new keys for this test run
     keys = generate_test_keys()
-    sender_private_key = keys['private_key']  # Hex format for SentryStr
-    sender_public_key = keys['public_key_hex']  # For display
+    sender_private_key = keys["private_key"]  # Hex format for SentryStr
+    sender_public_key = keys["public_key_hex"]  # For display
 
     print("🔐 DYNAMIC KEY GENERATION TEST")
     print("=" * 60)
@@ -58,7 +60,9 @@ def run_dynamic_key_test():
         encrypted_config.with_encryption(TARGET_PUBKEY)
         encrypted_client = sentrystr.NostrSentryClient(encrypted_config)
 
-        encrypted_client.capture_message(f"🔐 Encrypted test message from dynamically generated key: {sender_public_key[:16]}...")
+        encrypted_client.capture_message(
+            f"🔐 Encrypted test message from dynamically generated key: {sender_public_key[:16]}..."
+        )
         print("✅ Sent encrypted message to target")
         time.sleep(2)
 
@@ -67,7 +71,9 @@ def run_dynamic_key_test():
         public_config = sentrystr.Config(sender_private_key, RELAYS)
         public_client = sentrystr.NostrSentryClient(public_config)
 
-        public_client.capture_message(f"🌍 Public test message from new key: {sender_public_key[:16]}...")
+        public_client.capture_message(
+            f"🌍 Public test message from new key: {sender_public_key[:16]}..."
+        )
         print("✅ Sent public message")
         time.sleep(2)
 
@@ -86,7 +92,9 @@ def run_dynamic_key_test():
 
         # Add tags with dynamic data
         event.with_tag("test_type", "dynamic_keys")
-        event.with_tag("sender_pubkey", sender_public_key[:20] + "...")  # Truncated for privacy
+        event.with_tag(
+            "sender_pubkey", sender_public_key[:20] + "..."
+        )  # Truncated for privacy
         event.with_tag("timestamp", datetime.now().isoformat())
         event.with_tag("test_run_id", str(int(time.time())))
 
@@ -118,7 +126,9 @@ def run_dynamic_key_test():
 
         stacktrace = sentrystr.Stacktrace([frame1, frame2, frame3])
 
-        exception = sentrystr.Exception("KeyValidationError", f"Invalid key format for {sender_public_key[:20]}...")
+        exception = sentrystr.Exception(
+            "KeyValidationError", f"Invalid key format for {sender_public_key[:20]}..."
+        )
         exception.with_stacktrace(stacktrace)
 
         exception_event = sentrystr.Event()
@@ -136,11 +146,20 @@ def run_dynamic_key_test():
         print("\n📝 Test 5: Multiple severity levels")
 
         severity_tests = [
-            ("debug", f"Debug: Key pair generated successfully - {sender_public_key[:16]}..."),
+            (
+                "debug",
+                f"Debug: Key pair generated successfully - {sender_public_key[:16]}...",
+            ),
             ("info", f"Info: Connection established from {sender_public_key[:16]}..."),
-            ("warning", f"Warning: Rate limiting applied to {sender_public_key[:16]}..."),
+            (
+                "warning",
+                f"Warning: Rate limiting applied to {sender_public_key[:16]}...",
+            ),
             ("error", f"Error: Authentication failed for {sender_public_key[:16]}..."),
-            ("fatal", f"Fatal: System shutdown initiated by {sender_public_key[:16]}...")
+            (
+                "fatal",
+                f"Fatal: System shutdown initiated by {sender_public_key[:16]}...",
+            ),
         ]
 
         for level, message in severity_tests:
@@ -157,14 +176,18 @@ def run_dynamic_key_test():
             # Alternate between encrypted and public
             client = encrypted_client if level in ["error", "fatal"] else public_client
             client.capture_event(event)
-            print(f"✅ Sent {level.upper()} level event ({'encrypted' if level in ['error', 'fatal'] else 'public'})")
+            print(
+                f"✅ Sent {level.upper()} level event ({'encrypted' if level in ['error', 'fatal'] else 'public'})"
+            )
             time.sleep(1)
 
         # Test 6: Performance monitoring with dynamic data
         print("\n📝 Test 6: Performance monitoring")
 
         perf_event = sentrystr.Event()
-        perf_event.with_message(f"Performance: Key generation took 0.{int(time.time()) % 1000}ms")
+        perf_event.with_message(
+            f"Performance: Key generation took 0.{int(time.time()) % 1000}ms"
+        )
         perf_event.with_level(sentrystr.Level("info"))
         perf_event.with_tag("performance", "key_generation")
         perf_event.with_tag("operation", "dynamic_key_creation")
@@ -176,7 +199,7 @@ def run_dynamic_key_test():
         public_client.capture_event(perf_event)
         print("✅ Sent performance monitoring event")
 
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("🎉 Dynamic key test completed successfully!")
         print(f"📱 Check Nostr clients for events from: {sender_public_key[:20]}...")
         print(f"🔐 Encrypted events sent to: {TARGET_NPUB}")
@@ -189,8 +212,10 @@ def run_dynamic_key_test():
     except Exception as e:
         print(f"❌ Dynamic key test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 if __name__ == "__main__":
     success = run_dynamic_key_test()

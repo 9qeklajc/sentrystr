@@ -4,17 +4,18 @@ Combined example demonstrating both event capture and encrypted messaging
 Based on sentrystr/src/combined_example.rs
 """
 
-import sys
 import os
+import sys
 import time
 from datetime import datetime
 
 # Add the built module to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'python'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "python"))
 
 try:
     import sentrystr
     from key_generator import generate_test_keys, get_target_pubkey
+
     print("✓ Successfully imported sentrystr and key generator")
 except ImportError as e:
     print(f"❌ Failed to import: {e}")
@@ -25,10 +26,8 @@ except ImportError as e:
 TARGET_NPUB = "npub18kpn83drge7x9vz4cuhh7xta79sl4tfq55se4e554yj90s8y3f7qa49nps"
 TARGET_PUBKEY = get_target_pubkey()  # Use npub directly
 
-RELAYS = [
-    "wss://relay.damus.io",
-    "wss://nos.lol"
-]
+RELAYS = ["wss://relay.damus.io", "wss://nos.lol"]
+
 
 def run_combined_example():
     """
@@ -45,8 +44,8 @@ def run_combined_example():
 
     # Generate keys for this session (like Keys::generate() in Rust)
     keys = generate_test_keys()
-    sender_private_key = keys['private_key']
-    sender_public_key = keys['public_key_hex']
+    sender_private_key = keys["private_key"]
+    sender_public_key = keys["public_key_hex"]
 
     print(f"🔑 Generated sender key: {sender_public_key[:20]}...")
     print(f"🎯 Target recipient: {TARGET_NPUB}")
@@ -82,7 +81,9 @@ def run_combined_example():
         time.sleep(2)
 
         # 2. Capture a warning event - encrypted (equivalent to Level::Warning in Rust)
-        print("\n📝 Test 2: Warning event (encrypted) - equivalent to Level::Warning with DM in Rust")
+        print(
+            "\n📝 Test 2: Warning event (encrypted) - equivalent to Level::Warning with DM in Rust"
+        )
         warning_event = sentrystr.Event()
         warning_event.with_message("High memory usage detected")
         warning_event.with_level(sentrystr.Level("warning"))
@@ -98,14 +99,18 @@ def run_combined_example():
         time.sleep(2)
 
         # 3. Send a standalone message - encrypted (equivalent to send_direct_message in Rust)
-        print("\n📝 Test 3: Standalone encrypted message - equivalent to send_direct_message in Rust")
+        print(
+            "\n📝 Test 3: Standalone encrypted message - equivalent to send_direct_message in Rust"
+        )
         standalone_message = "Manual alert: System maintenance required"
         encrypted_client.capture_message(standalone_message)
         print("✅ Standalone encrypted message sent")
         time.sleep(2)
 
         # 4. Capture an error - encrypted (equivalent to Level::Error in Rust)
-        print("\n📝 Test 4: Error event (encrypted) - equivalent to Level::Error with DM in Rust")
+        print(
+            "\n📝 Test 4: Error event (encrypted) - equivalent to Level::Error with DM in Rust"
+        )
         error_event = sentrystr.Event()
         error_event.with_message("Database connection failed")
         error_event.with_level(sentrystr.Level("error"))
@@ -163,7 +168,7 @@ def run_combined_example():
         print("✅ Dynamic key generation (like Keys::generate())")
         print()
         print("📱 Events sent to:")
-        print(f"   • Public events: visible to all monitoring sender key")
+        print("   • Public events: visible to all monitoring sender key")
         print(f"   • Encrypted events: only visible to {TARGET_NPUB}")
         print(f"   • Sender key: {sender_public_key[:20]}...")
         print("⏰ Events may take a moment to propagate across relays")
@@ -173,8 +178,10 @@ def run_combined_example():
     except Exception as e:
         print(f"❌ Combined example failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 def demonstrate_configuration_switching():
     """
@@ -194,7 +201,7 @@ def demonstrate_configuration_switching():
 
         # Configuration 1: High-security encrypted events (like NIP-17 in Rust)
         print("\n📝 Configuration 1: High-security encrypted events")
-        secure_config = sentrystr.Config(config1_keys['private_key'], RELAYS)
+        secure_config = sentrystr.Config(config1_keys["private_key"], RELAYS)
         secure_config.with_encryption(TARGET_PUBKEY)
         secure_client = sentrystr.NostrSentryClient(secure_config)
 
@@ -211,7 +218,7 @@ def demonstrate_configuration_switching():
 
         # Configuration 2: Public events for non-sensitive data
         print("\n📝 Configuration 2: Public events for monitoring")
-        public_config = sentrystr.Config(config2_keys['private_key'], RELAYS)
+        public_config = sentrystr.Config(config2_keys["private_key"], RELAYS)
         public_client = sentrystr.NostrSentryClient(public_config)
 
         public_event = sentrystr.Event()
@@ -233,6 +240,7 @@ def demonstrate_configuration_switching():
         print(f"❌ Configuration switching failed: {e}")
         return False
 
+
 def main():
     """Main function running all examples"""
     print("🚀 SentryStr Python Combined Example")
@@ -249,12 +257,15 @@ def main():
         if success1 and success2:
             print("\n" + "=" * 80)
             print("🎉 All combined examples completed successfully!")
-            print("📚 This demonstrates the same functionality as the Rust combined_example.rs")
+            print(
+                "📚 This demonstrates the same functionality as the Rust combined_example.rs"
+            )
             print("🔄 Run this script multiple times to see different keys each time")
         else:
             print("\n❌ Some examples failed")
     else:
         print("\n❌ Main example failed")
+
 
 if __name__ == "__main__":
     main()
