@@ -10,7 +10,7 @@ members = [
 
 [workspace.package]
 edition = "2024"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["9qeklajc <npub1ygjd597hdwu8larprmhj893d5p832j5mhejpx40ukezgudvayg9qeklajc>"]
 license = "MIT"
 repository = "https://github.com/9qeklajc/sentrystr"
