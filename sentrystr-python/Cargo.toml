@@ -1,0 +1,21 @@
+[package]
+name = "sentrystr-python"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Python bindings for SentryStr - a decentralized error tracking system using Nostr"
+
+[lib]
+name = "sentrystr_python"
+crate-type = ["cdylib"]
+
+[dependencies]
+sentrystr = { path = "../sentrystr" }
+pyo3 = { version = "0.26", features = ["extension-module", "chrono"] }
+tokio = { workspace = true, features = ["rt-multi-thread"] }
+chrono = { workspace = true }
+serde_json = { workspace = true }
+nostr = { workspace = true }
+nostr-sdk = { workspace = true }

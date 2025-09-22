@@ -10,7 +10,7 @@ readme = "README.md"
 
 [[bin]]
 name = "sentrystr-example"
-path = "src/main.rs"
+path = "src/main_combined.rs"
 
 [[bin]]
 name = "sentrystr-encrypted-example"

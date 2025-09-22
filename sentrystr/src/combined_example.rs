@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use crate::{Config, DirectMessageBuilder, Event, Level, NostrSentryClient, Result};
 use nostr::prelude::*;
 use nostr_sdk::prelude::*;
@@ -11,6 +13,7 @@ pub async fn run_combined_example() -> Result<()> {
         vec![
             "wss://relay.damus.io".to_string(),
             "wss://nos.lol".to_string(),
+            "wss://nostr.chaima.info".to_string(),
         ],
     );
 
@@ -25,11 +28,13 @@ pub async fn run_combined_example() -> Result<()> {
     // Add relays to the DM client
     nostr_client.add_relay("wss://relay.damus.io").await?;
     nostr_client.add_relay("wss://nos.lol").await?;
+    nostr_client.add_relay("wss://nostr.chaima.info").await?;
     nostr_client.connect().await;
 
-    // Create recipient public key (in practice, this would be provided by user)
-    let recipient_pubkey = PublicKey::from_hex("your_recipient_pubkey_here")
-        .map_err(|e| crate::SentryStrError::Config(format!("Invalid pubkey: {}", e)))?;
+    // Create recipient public key - npub18kpn83drge7x9vz4cuhh7xta79sl4tfq55se4e554yj90s8y3f7qa49nps
+    let recipient_pubkey =
+        PublicKey::from_str("npub18kpn83drge7x9vz4cuhh7xta79sl4tfq55se4e554yj90s8y3f7qa49nps")
+            .map_err(|e| crate::SentryStrError::Config(format!("Invalid pubkey: {}", e)))?;
 
     // Build the DirectMessageSender with configuration
     let dm_sender = DirectMessageBuilder::new()
@@ -69,7 +74,7 @@ pub async fn run_combined_example() -> Result<()> {
 
     // 4. Capture an error - this will also trigger a DM
     let error_event = Event::new()
-        .with_message("Database connection failed")
+        .with_message("hello world")
         .with_level(Level::Error);
 
     let event_id3 = client.capture_event(error_event).await?;
@@ -92,8 +97,9 @@ pub async fn create_client_with_dm_builder() -> Result<NostrSentryClient> {
     nostr_client.add_relay("wss://relay.damus.io").await?;
     nostr_client.connect().await;
 
-    let recipient_pubkey = PublicKey::from_hex("your_recipient_pubkey_here")
-        .map_err(|e| crate::SentryStrError::Config(format!("Invalid pubkey: {}", e)))?;
+    let recipient_pubkey =
+        PublicKey::from_str("npub18kpn83drge7x9vz4cuhh7xta79sl4tfq55se4e554yj90s8y3f7qa49nps")
+            .map_err(|e| crate::SentryStrError::Config(format!("Invalid pubkey: {}", e)))?;
 
     let dm_sender = DirectMessageBuilder::new()
         .with_client(nostr_client)
@@ -118,8 +124,9 @@ pub async fn switch_dm_configurations(client: &mut NostrSentryClient) -> Result<
     nostr_client.connect().await;
 
     // First configuration: NIP-17 for all events
-    let recipient1 = PublicKey::from_hex("recipient1_pubkey_here")
-        .map_err(|e| crate::SentryStrError::Config(format!("Invalid pubkey: {}", e)))?;
+    let recipient1 =
+        PublicKey::from_str("npub18kpn83drge7x9vz4cuhh7xta79sl4tfq55se4e554yj90s8y3f7qa49nps")
+            .map_err(|e| crate::SentryStrError::Config(format!("Invalid pubkey: {}", e)))?;
 
     let dm_sender1 = DirectMessageBuilder::new()
         .with_client(nostr_client.clone())
@@ -134,8 +141,9 @@ pub async fn switch_dm_configurations(client: &mut NostrSentryClient) -> Result<
     client.capture_error("Error with first DM config").await?;
 
     // Switch to second configuration: NIP-44 for errors only
-    let recipient2 = PublicKey::from_hex("recipient2_pubkey_here")
-        .map_err(|e| crate::SentryStrError::Config(format!("Invalid pubkey: {}", e)))?;
+    let recipient2 =
+        PublicKey::from_str("npub18kpn83drge7x9vz4cuhh7xta79sl4tfq55se4e554yj90s8y3f7qa49nps")
+            .map_err(|e| crate::SentryStrError::Config(format!("Invalid pubkey: {}", e)))?;
 
     let dm_sender2 = DirectMessageBuilder::new()
         .with_client(nostr_client)

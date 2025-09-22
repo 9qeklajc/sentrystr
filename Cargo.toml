@@ -5,6 +5,7 @@ members = [
     "sentrystr-collector",
     "sentrystr-api",
     "sentrystr-tracing",
+    "sentrystr-python",
 ]
 
 [workspace.package]
