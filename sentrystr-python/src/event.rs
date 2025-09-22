@@ -389,7 +389,7 @@ impl PyEvent {
     #[new]
     pub fn new() -> Self {
         Self {
-            inner: Event::new(),
+            inner: Event::with_platform("python"),
         }
     }
 

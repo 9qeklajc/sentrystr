@@ -93,10 +93,14 @@ impl Default for Event {
 
 impl Event {
     pub fn new() -> Self {
+        Self::with_platform("rust")
+    }
+
+    pub fn with_platform(platform: &str) -> Self {
         Self {
             event_id: Uuid::new_v4().to_string(),
             timestamp: Utc::now(),
-            platform: "rust".to_string(),
+            platform: platform.to_string(),
             level: Level::Info,
             logger: None,
             transaction: None,

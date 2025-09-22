@@ -1,2 +1,11 @@
 /target
 sentrystr-python/venv
+*.so
+*.dylib
+*.pyd
+__pycache__/
+*.py[cod]
+*$py.class
+build/
+dist/
+*.egg-info/
