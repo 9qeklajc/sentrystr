@@ -21,7 +21,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-sentrystr = "0.1.0"
+sentrystr = "0.1.2"
 ```
 
 Basic usage:

@@ -2,6 +2,16 @@
 
 A decentralized error tracking and alerting system using Nostr relays. Send structured error events to Nostr with optional direct message alerts for critical issues.
 
+## Published Packages
+
+| Package               | Platform | Version                                                                                                               | Link                                                      |
+| --------------------- | -------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `sentrystr`           | Rust     | [![Crates.io](https://img.shields.io/crates/v/sentrystr.svg)](https://crates.io/crates/sentrystr)                     | [crates.io](https://crates.io/crates/sentrystr)           |
+| `sentrystr-api`       | Rust     | [![Crates.io](https://img.shields.io/crates/v/sentrystr-api.svg)](https://crates.io/crates/sentrystr-api)             | [crates.io](https://crates.io/crates/sentrystr-api)       |
+| `sentrystr-collector` | Rust     | [![Crates.io](https://img.shields.io/crates/v/sentrystr-collector.svg)](https://crates.io/crates/sentrystr-collector) | [crates.io](https://crates.io/crates/sentrystr-collector) |
+| `sentrystr-tracing`   | Rust     | [![Crates.io](https://img.shields.io/crates/v/sentrystr-tracing.svg)](https://crates.io/crates/sentrystr-tracing)     | [crates.io](https://crates.io/crates/sentrystr-tracing)   |
+| `sentrystr`           | Python   | [![PyPI](https://img.shields.io/pypi/v/sentrystr.svg)](https://pypi.org/project/sentrystr/)                           | [pypi.org](https://pypi.org/project/sentrystr/)           |
+
 ## 🚀 Quick Start
 
 ### Core Usage (Direct Event Sending)
@@ -198,7 +208,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ## 📝 License
 
 MIT License - see LICENSE file for details.
-
 
 ---
 
