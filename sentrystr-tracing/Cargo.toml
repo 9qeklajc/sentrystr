@@ -9,7 +9,7 @@ description.workspace = true
 readme = "README.md"
 
 [dependencies]
-sentrystr = { version = "0.1.1", path = "../sentrystr" }
+sentrystr = { version = "0.2.0", path = "../sentrystr" }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 serde = { workspace = true }

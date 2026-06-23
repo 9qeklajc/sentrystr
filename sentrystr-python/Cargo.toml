@@ -6,6 +6,8 @@ authors.workspace = true
 license.workspace = true
 repository.workspace = true
 description = "Python bindings for SentryStr - a decentralized error tracking system using Nostr"
+# This is a PyO3 extension module published to PyPI (via maturin), never to crates.io.
+publish = false
 
 [lib]
 name = "sentrystr_python"

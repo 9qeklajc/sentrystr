@@ -12,6 +12,11 @@ from ._sentrystr import (
     Stacktrace,
     User,
 )
+from .handler import (
+    SentryStrHandler,
+    SentryStrLoggingHandle,
+    install_sentrystr_logging,
+)
 
 __all__ = [
     "NostrSentryClient",
@@ -24,6 +29,9 @@ __all__ = [
     "User",
     "Request",
     "SentryStrError",
+    "SentryStrHandler",
+    "SentryStrLoggingHandle",
+    "install_sentrystr_logging",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

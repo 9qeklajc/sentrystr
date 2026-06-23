@@ -41,6 +41,43 @@ async def main():
 asyncio.run(main())
 ```
 
+## Logging Integration (Background, Non-Blocking)
+
+Announcing an event to Nostr relays is a network round-trip and **blocks** the
+calling thread. To plug SentryStr into Python's standard `logging` without
+stalling your request handlers or event loop, use `install_sentrystr_logging`.
+It attaches a `QueueHandler` to your logger(s) and drains the queue from a
+dedicated background worker thread (built on `logging.handlers.QueueListener`),
+so the slow relay publish never happens on the hot path.
+
+```python
+import logging
+from sentrystr import install_sentrystr_logging
+
+# Forward WARNING and above from the "myapp" logger to the relays.
+handle = install_sentrystr_logging(
+    relays=["wss://relay.damus.io", "wss://nos.lol"],
+    private_key="nsec1...",          # optional; an ephemeral key is generated if omitted
+    level=logging.WARNING,           # int or name, e.g. "ERROR"
+    loggers=["myapp"],               # one logger, or pass several at once
+    # recipient_pubkey="npub1...",   # optional: NIP-44 encrypt events to this pubkey
+)
+
+logging.getLogger("myapp").error("Something broke")  # returns immediately
+
+# On shutdown, flush queued events and stop the worker thread:
+handle.close()
+```
+
+`install_sentrystr_logging` accepts `relays`/`private_key`, or a prebuilt
+`config=`, or an existing `client=`. Records are enriched with the logger name,
+level, module/function, and `request_id` (if present on the record) as tags. The
+handle is also a context manager.
+
+For full control you can use `SentryStrHandler` directly — it is a plain
+`logging.Handler` (and therefore blocking); wrap it in your own
+`QueueListener` if you need a custom worker setup.
+
 ## Advanced Usage
 
 ### Creating Custom Events

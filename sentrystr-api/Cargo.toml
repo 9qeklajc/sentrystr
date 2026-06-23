@@ -13,8 +13,8 @@ name = "sentrystr-api"
 path = "src/main.rs"
 
 [dependencies]
-sentrystr-collector = { version = "0.1.1", path = "../sentrystr-collector" }
-sentrystr = { version = "0.1.0", path = "../sentrystr" }
+sentrystr-collector = { version = "0.2.0", path = "../sentrystr-collector" }
+sentrystr = { version = "0.2.0", path = "../sentrystr" }
 nostr = { workspace = true }
 axum = "0.7"
 tokio = { workspace = true }

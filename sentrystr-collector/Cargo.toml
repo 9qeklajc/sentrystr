@@ -13,7 +13,7 @@ name = "sentrystr-collector"
 path = "src/main.rs"
 
 [dependencies]
-sentrystr = { version = "0.1.1", path = "../sentrystr" }
+sentrystr = { version = "0.2.0", path = "../sentrystr" }
 nostr-sdk = { workspace = true }
 nostr = { workspace = true }
 serde = { workspace = true }
