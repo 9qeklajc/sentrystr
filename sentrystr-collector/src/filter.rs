@@ -109,28 +109,28 @@ impl EventFilter {
     }
 
     pub fn matches(&self, event: &Event, author: &PublicKey) -> bool {
-        if let Some(ref authors) = self.authors {
-            if !authors.contains(author) {
-                return false;
-            }
+        if let Some(ref authors) = self.authors
+            && !authors.contains(author)
+        {
+            return false;
         }
 
-        if let Some(ref levels) = self.levels {
-            if !levels.contains(&event.level) {
-                return false;
-            }
+        if let Some(ref levels) = self.levels
+            && !levels.contains(&event.level)
+        {
+            return false;
         }
 
-        if let Some(since) = self.since {
-            if event.timestamp < since {
-                return false;
-            }
+        if let Some(since) = self.since
+            && event.timestamp < since
+        {
+            return false;
         }
 
-        if let Some(until) = self.until {
-            if event.timestamp > until {
-                return false;
-            }
+        if let Some(until) = self.until
+            && event.timestamp > until
+        {
+            return false;
         }
 
         if let Some(ref filter_tags) = self.tags {
@@ -163,15 +163,13 @@ impl EventFilter {
                 let mut found = false;
                 for tag in nostr_event.tags.iter() {
                     let tag_vec = tag.clone().to_vec();
-                    if let Some(tag_key) = tag_vec.first() {
-                        if tag_key == key {
-                            if let Some(tag_value) = tag_vec.get(1) {
-                                if tag_value == value {
-                                    found = true;
-                                    break;
-                                }
-                            }
-                        }
+                    if let Some(tag_key) = tag_vec.first()
+                        && tag_key == key
+                        && let Some(tag_value) = tag_vec.get(1)
+                        && tag_value == value
+                    {
+                        found = true;
+                        break;
                     }
                 }
                 if !found {

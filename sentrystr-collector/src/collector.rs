@@ -107,31 +107,31 @@ impl EventCollector {
         let mut collected_events = Vec::new();
 
         for event in events {
-            if let Ok(parsed_event) = serde_json::from_str::<Event>(&event.content) {
-                if filter.matches_nostr_event(&parsed_event, &event.pubkey, &event) {
-                    let collected_event = CollectedEvent {
+            if let Ok(parsed_event) = serde_json::from_str::<Event>(&event.content)
+                && filter.matches_nostr_event(&parsed_event, &event.pubkey, &event)
+            {
+                let collected_event = CollectedEvent {
+                    event: parsed_event.clone(),
+                    author: event.pubkey,
+                    nostr_event_id: event.id,
+                    received_at: Utc::now(),
+                };
+
+                // Send private message if configured
+                if let Some(ref dm_sender) = self.dm_sender {
+                    let message_event = MessageEvent {
                         event: parsed_event.clone(),
                         author: event.pubkey,
                         nostr_event_id: event.id,
                         received_at: Utc::now(),
                     };
 
-                    // Send private message if configured
-                    if let Some(ref dm_sender) = self.dm_sender {
-                        let message_event = MessageEvent {
-                            event: parsed_event.clone(),
-                            author: event.pubkey,
-                            nostr_event_id: event.id,
-                            received_at: Utc::now(),
-                        };
-
-                        if let Err(e) = dm_sender.send_message_for_event(&message_event).await {
-                            eprintln!("Failed to send direct message: {}", e);
-                        }
+                    if let Err(e) = dm_sender.send_message_for_event(&message_event).await {
+                        eprintln!("Failed to send direct message: {}", e);
                     }
-
-                    collected_events.push(collected_event);
                 }
+
+                collected_events.push(collected_event);
             }
         }
 
@@ -171,41 +171,32 @@ impl EventCollector {
                     event,
                     ..
                 } = notification
+                    && sub_id == subscription_id.val
+                    && let Ok(parsed_event) = serde_json::from_str::<Event>(&event.content)
+                    && filter_clone.matches_nostr_event(&parsed_event, &event.pubkey, &event)
                 {
-                    if sub_id == subscription_id.val {
-                        if let Ok(parsed_event) = serde_json::from_str::<Event>(&event.content) {
-                            if filter_clone.matches_nostr_event(
-                                &parsed_event,
-                                &event.pubkey,
-                                &event,
-                            ) {
-                                let collected_event = CollectedEvent {
-                                    event: parsed_event.clone(),
-                                    author: event.pubkey,
-                                    nostr_event_id: event.id,
-                                    received_at: Utc::now(),
-                                };
+                    let collected_event = CollectedEvent {
+                        event: parsed_event.clone(),
+                        author: event.pubkey,
+                        nostr_event_id: event.id,
+                        received_at: Utc::now(),
+                    };
 
-                                if let Some(ref dm_sender) = dm_sender_clone {
-                                    let message_event = MessageEvent {
-                                        event: parsed_event.clone(),
-                                        author: event.pubkey,
-                                        nostr_event_id: event.id,
-                                        received_at: Utc::now(),
-                                    };
+                    if let Some(ref dm_sender) = dm_sender_clone {
+                        let message_event = MessageEvent {
+                            event: parsed_event.clone(),
+                            author: event.pubkey,
+                            nostr_event_id: event.id,
+                            received_at: Utc::now(),
+                        };
 
-                                    if let Err(e) =
-                                        dm_sender.send_message_for_event(&message_event).await
-                                    {
-                                        eprintln!("Failed to send direct message: {}", e);
-                                    }
-                                }
-
-                                if tx.send(collected_event).await.is_err() {
-                                    break;
-                                }
-                            }
+                        if let Err(e) = dm_sender.send_message_for_event(&message_event).await {
+                            eprintln!("Failed to send direct message: {}", e);
                         }
+                    }
+
+                    if tx.send(collected_event).await.is_err() {
+                        break;
                     }
                 }
             }

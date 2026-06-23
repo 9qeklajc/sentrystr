@@ -1,3 +1,10 @@
+// The `MutexGuard` on `inner` is held across `.await`, but only inside
+// `runtime.block_on`, which drives the future to completion on the calling
+// thread and releases the guard before returning. No async task is ever
+// suspended while holding it, so concurrent callers simply serialize on the
+// mutex (there is no deadlock risk). Allow the lint for this module.
+#![allow(clippy::await_holding_lock)]
+
 use pyo3::prelude::*;
 use std::sync::{Arc, Mutex};
 use tokio::runtime::Runtime;

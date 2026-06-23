@@ -1,3 +1,8 @@
+// These are `#[pyclass]` types constructed from Python via their `#[new]`
+// constructors; a Rust `Default` impl would never be used, so the lint adds no
+// value here.
+#![allow(clippy::new_without_default)]
+
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
 use sentrystr::{Event, Exception, Frame, Level, Request, Stacktrace, User};
