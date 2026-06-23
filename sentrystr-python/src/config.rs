@@ -67,16 +67,21 @@ impl PyConfig {
         let encryption_version = match version.as_str() {
             "none" => EncryptionVersion::None,
             "nip44v2" => EncryptionVersion::Nip44V2,
-            _ => return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(
-                "Invalid encryption version. Must be 'none' or 'nip44v2'"
-            )),
+            _ => {
+                return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(
+                    "Invalid encryption version. Must be 'none' or 'nip44v2'",
+                ));
+            }
         };
         self.inner.encryption_version = encryption_version;
         Ok(())
     }
 
     fn __repr__(&self) -> String {
-        format!("Config(relays={:?}, encrypt_events={})", self.inner.relays, self.inner.encrypt_events)
+        format!(
+            "Config(relays={:?}, encrypt_events={})",
+            self.inner.relays, self.inner.encrypt_events
+        )
     }
 }
 

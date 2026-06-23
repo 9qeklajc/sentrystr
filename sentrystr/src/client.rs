@@ -1,6 +1,6 @@
 use crate::{
-    validate_encryption_keys, Config, DirectMessageSender, EncryptionVersion, Event, MessageEvent,
-    Result, SentryStrError,
+    Config, DirectMessageSender, EncryptionVersion, Event, MessageEvent, Result, SentryStrError,
+    validate_encryption_keys,
 };
 use chrono::Utc;
 use nostr::prelude::*;

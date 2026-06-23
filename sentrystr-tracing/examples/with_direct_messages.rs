@@ -1,6 +1,6 @@
 use nostr::prelude::*;
 use sentrystr::Level;
-use sentrystr_tracing::{builder::DirectMessageConfig, SentryStrTracingBuilder};
+use sentrystr_tracing::{SentryStrTracingBuilder, builder::DirectMessageConfig};
 use tracing::{error, info, warn};
 
 #[tokio::main]

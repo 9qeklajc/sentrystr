@@ -1,8 +1,8 @@
-use axum::{extract::Query, Json};
+use axum::{Json, extract::Query};
 use chrono::Utc;
 use nostr::PublicKey;
-use sentrystr_collector::{EventCollector, EventFilter};
 use sentrystr::Level;
+use sentrystr_collector::{EventCollector, EventFilter};
 
 use crate::models::{EventQuery, EventResponse, EventsResponse, HealthResponse};
 use crate::{ApiError, Result};

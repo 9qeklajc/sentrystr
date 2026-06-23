@@ -2,13 +2,13 @@ use pyo3::prelude::*;
 
 mod client;
 mod config;
-mod event;
 mod error;
+mod event;
 
 pub use client::*;
 pub use config::*;
-pub use event::*;
 pub use error::*;
+pub use event::*;
 
 #[pymodule]
 fn _sentrystr(m: &Bound<'_, PyModule>) -> PyResult<()> {

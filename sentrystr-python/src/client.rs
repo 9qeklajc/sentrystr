@@ -1,9 +1,9 @@
 use pyo3::prelude::*;
-use tokio::runtime::Runtime;
 use std::sync::{Arc, Mutex};
+use tokio::runtime::Runtime;
 
-use sentrystr::NostrSentryClient;
 use crate::{PyConfig, PyEvent};
+use sentrystr::NostrSentryClient;
 
 #[pyclass(name = "NostrSentryClient")]
 pub struct PyNostrSentryClient {
@@ -17,7 +17,7 @@ impl PyNostrSentryClient {
     pub fn new(py: Python<'_>, config: &PyConfig) -> PyResult<Self> {
         let runtime = Arc::new(
             Runtime::new()
-                .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))?
+                .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))?,
         );
 
         // Clone the plain config out of the pyclass so the closure captures only
@@ -75,7 +75,12 @@ impl PyNostrSentryClient {
         .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))
     }
 
-    pub fn capture_exception(&self, py: Python<'_>, exception_type: String, message: Option<String>) -> PyResult<()> {
+    pub fn capture_exception(
+        &self,
+        py: Python<'_>,
+        exception_type: String,
+        message: Option<String>,
+    ) -> PyResult<()> {
         let inner = self.inner.clone();
         let runtime = self.runtime.clone();
         py.detach(move || {
@@ -112,19 +117,26 @@ impl PyNostrSentryClient {
 
         self.runtime.block_on(async {
             // Parse the recipient public key
-            let recipient_pubkey = PublicKey::from_str(&recipient_npub)
-                .map_err(|e| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Invalid pubkey: {}", e)))?;
+            let recipient_pubkey = PublicKey::from_str(&recipient_npub).map_err(|e| {
+                PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Invalid pubkey: {}", e))
+            })?;
 
             // Generate keys for the DM client
             let keys = Keys::generate();
             let nostr_client = Client::new(keys.clone());
 
             // Add the same relays as the main client (simplified approach)
-            nostr_client.add_relay("wss://relay.damus.io").await
+            nostr_client
+                .add_relay("wss://relay.damus.io")
+                .await
                 .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))?;
-            nostr_client.add_relay("wss://nos.lol").await
+            nostr_client
+                .add_relay("wss://nos.lol")
+                .await
                 .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))?;
-            nostr_client.add_relay("wss://nostr.chaima.info").await
+            nostr_client
+                .add_relay("wss://nostr.chaima.info")
+                .await
                 .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))?;
             nostr_client.connect().await;
 

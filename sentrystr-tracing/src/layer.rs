@@ -1,9 +1,9 @@
-use crate::{convert_tracing_level, create_sentrystr_event, extract_event_metadata, FieldVisitor};
+use crate::{FieldVisitor, convert_tracing_level, create_sentrystr_event, extract_event_metadata};
 use sentrystr::{DirectMessageSender, MessageEvent, NostrSentryClient};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use tracing::{Event, Subscriber};
-use tracing_subscriber::{layer::Context, Layer};
+use tracing_subscriber::{Layer, layer::Context};
 
 pub struct SentryStrLayer {
     client: Arc<RwLock<NostrSentryClient>>,

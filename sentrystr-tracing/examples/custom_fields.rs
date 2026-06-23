@@ -1,5 +1,5 @@
 use sentrystr_tracing::SentryStrTracingBuilder;
-use tracing::{error, info, warn, Instrument};
+use tracing::{Instrument, error, info, warn};
 
 #[derive(Debug)]
 struct User {

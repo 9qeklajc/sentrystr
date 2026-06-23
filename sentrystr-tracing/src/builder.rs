@@ -145,11 +145,7 @@ impl SentryStrTracingBuilder {
                 .with_client(dm_client)
                 .with_keys(dm_keys)
                 .with_recipient(dm_config.recipient_pubkey)
-                .with_min_level(
-                    dm_config
-                        .min_level
-                        .unwrap_or(sentrystr::Level::Warning),
-                )
+                .with_min_level(dm_config.min_level.unwrap_or(sentrystr::Level::Warning))
                 .with_nip17(dm_config.use_nip17)
                 .build()?;
 

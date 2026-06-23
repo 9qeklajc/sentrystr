@@ -1,6 +1,6 @@
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
-use sentrystr::{Event, Level, Exception, Stacktrace, Frame, User, Request};
+use sentrystr::{Event, Exception, Frame, Level, Request, Stacktrace, User};
 use std::collections::HashMap;
 
 #[pyclass(name = "Level")]
@@ -24,7 +24,7 @@ impl PyLevel {
             "error" => Ok(PyLevel::Error),
             "fatal" => Ok(PyLevel::Fatal),
             _ => Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(
-                "Invalid level. Must be one of: debug, info, warning, error, fatal"
+                "Invalid level. Must be one of: debug, info, warning, error, fatal",
             )),
         }
     }
@@ -172,7 +172,11 @@ impl PyStacktrace {
 
     #[getter]
     pub fn frames(&self) -> Vec<PyFrame> {
-        self.inner.frames.iter().map(|f| PyFrame { inner: f.clone() }).collect()
+        self.inner
+            .frames
+            .iter()
+            .map(|f| PyFrame { inner: f.clone() })
+            .collect()
     }
 }
 
@@ -527,7 +531,9 @@ fn python_to_json_value(value: &Bound<'_, PyAny>) -> PyResult<serde_json::Value>
         }
         Ok(serde_json::Value::Object(map))
     } else {
-        Ok(serde_json::Value::String(value.str()?.to_cow()?.to_string()))
+        Ok(serde_json::Value::String(
+            value.str()?.to_cow()?.to_string(),
+        ))
     }
 }
 
@@ -538,22 +544,30 @@ fn json_value_to_python(py: Python, value: &serde_json::Value) -> PyResult<Py<Py
         serde_json::Value::Null => Ok(py.None()),
         serde_json::Value::Bool(b) => {
             let py_bool = PyBool::new(py, *b);
-            Ok(<pyo3::Bound<'_, PyBool> as Clone>::clone(&py_bool).into_any().unbind())
+            Ok(<pyo3::Bound<'_, PyBool> as Clone>::clone(&py_bool)
+                .into_any()
+                .unbind())
         }
         serde_json::Value::Number(n) => {
             if let Some(i) = n.as_i64() {
                 let py_int = PyInt::new(py, i);
-                Ok(<pyo3::Bound<'_, PyInt> as Clone>::clone(&py_int).into_any().unbind())
+                Ok(<pyo3::Bound<'_, PyInt> as Clone>::clone(&py_int)
+                    .into_any()
+                    .unbind())
             } else if let Some(f) = n.as_f64() {
                 let py_float = PyFloat::new(py, f);
-                Ok(<pyo3::Bound<'_, PyFloat> as Clone>::clone(&py_float).into_any().unbind())
+                Ok(<pyo3::Bound<'_, PyFloat> as Clone>::clone(&py_float)
+                    .into_any()
+                    .unbind())
             } else {
                 Ok(py.None())
             }
         }
         serde_json::Value::String(s) => {
             let py_str = PyString::new(py, s);
-            Ok(<pyo3::Bound<'_, PyString> as Clone>::clone(&py_str).into_any().unbind())
+            Ok(<pyo3::Bound<'_, PyString> as Clone>::clone(&py_str)
+                .into_any()
+                .unbind())
         }
         serde_json::Value::Array(arr) => {
             let list = PyList::empty(py);

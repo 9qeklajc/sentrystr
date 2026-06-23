@@ -80,7 +80,7 @@ pub mod messaging;
 
 pub use client::NostrSentryClient;
 pub use config::{Config, EncryptionVersion};
-pub use encryption::{validate_encryption_keys, EncryptionHelper};
+pub use encryption::{EncryptionHelper, validate_encryption_keys};
 pub use error::SentryStrError;
 pub use event::{Event, Exception, Frame, Level, Request, Stacktrace, User};
 pub use messaging::{DirectMessageBuilder, DirectMessageConfig, DirectMessageSender, MessageEvent};
